@@ -208,6 +208,10 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-we
 .lu-zoom{animation:luZoomIn .8s cubic-bezier(.22,1,.36,1) forwards}
 .lu-old{opacity:.4}
 
+.rank-list-item{display:flex;align-items:center;gap:14px;padding:10px 0;border-bottom:1px solid var(--line)}
+.rank-list-item:last-child{border-bottom:none}
+.rank-list-pt{font-family:var(--font-serif);font-size:13px;color:var(--text);letter-spacing:.04em;flex:1;text-align:right}
+.rank-list-item.reached .rank-list-pt{color:var(--text-done)}
 .lb-box{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:40px 24px;text-align:center}
 .lb-title{font-family:var(--font-serif);font-size:18px;font-weight:300;letter-spacing:.12em;margin-bottom:48px;color:var(--text)}
 .lb-coins{display:flex;flex-direction:column;align-items:center;margin-bottom:32px}
@@ -268,6 +272,22 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-we
   </div>
 </div>
 
+<!-- RANK LIST MODAL -->
+<div class="modal-overlay" id="rankListModal">
+  <div class="modal-bg" onclick="closeRankModal()"></div>
+  <div class="modal-box" style="max-width:360px;max-height:80vh;display:flex;flex-direction:column;padding:24px 20px">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-shrink:0">
+      <div id="rankModalCurrentEmblem" style="width:44px;height:44px;flex-shrink:0"></div>
+      <div>
+        <div id="rankModalCurrentPt" style="font-family:var(--font-serif);font-size:14px;color:var(--text);letter-spacing:.06em"></div>
+        <div id="rankModalCurrentNext" style="font-family:var(--font-sans);font-size:10px;color:var(--text-light);letter-spacing:.06em;margin-top:2px"></div>
+      </div>
+    </div>
+    <div style="border-top:1px solid var(--line);margin-bottom:12px;flex-shrink:0"></div>
+    <div id="rankListContent" style="overflow-y:auto;flex:1"></div>
+  </div>
+</div>
+
 <!-- RESET CONFIRM MODAL -->
 <div class="modal-overlay" id="resetModal">
   <div class="modal-bg" onclick="closeResetModal()"></div>
@@ -308,7 +328,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-we
       </div>
       <div style="display:flex;align-items:center;gap:40px">
         <div style="display:flex;align-items:center;gap:10px;margin-right:0">
-          <div id="homeRankEmblem" style="width:52px;height:52px;flex-shrink:0"></div>
+          <div id="homeRankEmblem" style="width:52px;height:52px;flex-shrink:0;cursor:pointer" onclick="openRankModal()"></div>
           <div style="text-align:right">
             <div id="homeRankPt" style="font-family:var(--font-serif);font-size:14px;color:var(--text);letter-spacing:.06em"></div>
             <div id="homeRankNext" style="font-family:var(--font-sans);font-size:11px;color:var(--text-light);letter-spacing:.06em;margin-top:4px"></div>
@@ -316,15 +336,15 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-we
         </div>
         <div style="display:flex;flex-direction:column;align-items:center;gap:8px">
         <button class="gear-btn" onclick="openSettings()">
-          <span class="btn-label">設定</span>
+          
           <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
         </button>
         <button class="gear-btn" onclick="openPoints()">
-          <span class="btn-label">振り返り</span>
+          
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="11" width="4" height="10"/><rect x="9" y="15" width="4" height="6"/><rect x="16" y="4" width="4" height="17"/><path d="M2 21h20"/></svg>
         </button>
         <button class="gear-btn" onclick="openStartPicker()">
-          <span class="btn-label">５分だけ</span>
+          
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
             <polygon points="4,3 4,21 20,12"/>
           </svg>
@@ -391,23 +411,6 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-we
       <button class="btn-primary" onclick="saveReminderTime()" id="saveBtn">保存</button>
       <span class="s-saved" id="savedMsg">保存しました</span>
     </div>
-    <div class="s-sec">
-      <div class="s-sec-title">グラフの縦軸スケール</div>
-      <div style="margin-bottom:12px">
-        <div style="font-size:12px;color:var(--text-light);margin-bottom:8px">獲得ポイント（１マスあたり）</div>
-        <div style="display:flex;align-items:center;gap:8px">
-          <input type="number" id="scaleStepPts" min="1" class="dial-inp" style="width:60px" autocomplete="off" onkeydown="if(event.key==='Enter')saveScaleSettings()"> <span style="font-size:12px;color:var(--text-light)">pt</span>
-        </div>
-      </div>
-      <div style="margin-bottom:16px">
-        <div style="font-size:12px;color:var(--text-light);margin-bottom:8px">達成数（１マスあたり）</div>
-        <div style="display:flex;align-items:center;gap:8px">
-          <input type="number" id="scaleStepCnt" min="1" class="dial-inp" style="width:60px" autocomplete="off" onkeydown="if(event.key==='Enter')saveScaleSettings()"> <span style="font-size:12px;color:var(--text-light)">個</span>
-        </div>
-      </div>
-      <button class="btn-primary" onclick="saveScaleSettings()" id="scaleSaveBtn">保存</button>
-      <span class="s-saved" id="scaleSavedMsg">保存しました</span>
-    </div>
     <div class="s-sec" style="margin-top:48px;padding-top:24px;border-top:1px solid var(--line)">
       <div class="s-sec-title">リセット</div>
       <p style="font-size:12px;color:var(--text-light);line-height:1.8;margin-bottom:16px">すべての記録・設定を削除し、<br>チュートリアルに戻ります。</p>
@@ -423,7 +426,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-we
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:40px">
       <div class="s-title" style="margin-bottom:0">振り返り</div>
       <div style="display:flex;align-items:center;gap:10px">
-        <div id="rankEmblem" style="position:relative;width:52px;height:52px;flex-shrink:0"></div>
+        <div id="rankEmblem" style="position:relative;width:52px;height:52px;flex-shrink:0;cursor:pointer" onclick="openRankModal()"></div>
         <div style="text-align:right">
           <div id="rankPtDisp" style="font-family:var(--font-serif);font-size:20px;font-weight:300;color:var(--text);letter-spacing:.1em"></div>
           <div id="rankNextDisp" style="font-family:var(--font-sans);font-size:11px;color:var(--text-light);letter-spacing:.06em;margin-top:4px"></div>
@@ -578,6 +581,24 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-we
     <div class="modal-row">
       <div class="modal-label">タイトル</div>
       <input class="modal-input" id="editTitle" autocomplete="off" onkeydown="if(event.key==='Enter')submitEditSched()">
+      <div class="bell-wrap" style="flex-shrink:0">
+        <button class="bell-btn" id="editBellBtn" onclick="toggleEditBell()">
+          <svg viewBox="0 0 24 24">
+            <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+            <path d="M13.73 21a2 2 0 01-3.46 0"/>
+            <line id="editBellSlash" x1="3" y1="3" x2="21" y2="21"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+    <div class="notif-row" id="editNotifRow">
+      <div class="modal-label">通知</div>
+      <select class="notif-select" id="editNotifSel">
+        <option value="5">5分前</option>
+        <option value="10">10分前</option>
+        <option value="30">30分前</option>
+        <option value="60">60分前</option>
+      </select>
     </div>
     <div class="modal-actions">
       <button class="modal-btn danger" onclick="deleteSched()">削除</button>
@@ -906,6 +927,46 @@ function _drawLuEmblem(container, r, size){
     <text x="50" y="${mainY}" text-anchor="middle" dominant-baseline="middle" font-family="serif" font-size="${fs}" fill="${col}" font-weight="300">${rl}</text>
     <text x="50" y="74" text-anchor="middle" dominant-baseline="middle" font-family="serif" font-size="15" fill="${col}" font-weight="300">Lv.${r.lv}</text>
   </svg>`;
+}
+
+function openRankModal(){
+  const pts=Object.values(S.points||{}).reduce((s,d)=>s+(d.pts||0),0);
+  const r=calcRank(pts);
+  // 現在のエンブレム表示
+  const embWrap=document.getElementById('rankModalCurrentEmblem');
+  _drawLuEmblem(embWrap, r||{rank:'—',lv:0}, 44);
+  document.getElementById('rankModalCurrentPt').textContent=pts+' pt';
+  const nextLevel=RANK_TABLE.slice().reverse().find(t=>t.pts>pts);
+  const label=(r&&r.lv===10)?'次のランクまであと':'次のレベルまであと';
+  document.getElementById('rankModalCurrentNext').textContent=nextLevel?label+' '+(nextLevel.pts-pts)+' pt':'最高ランク達成';
+
+  // ランク一覧（pt低い順）
+  const list=document.getElementById('rankListContent');
+  list.innerHTML='';
+  [...RANK_TABLE].sort((a,b)=>a.pts-b.pts).forEach(entry=>{
+    const reached=pts>=entry.pts;
+    const item=document.createElement('div');
+    item.className='rank-list-item'+(reached?' reached':'');
+    const embDiv=document.createElement('div');
+    embDiv.style.cssText='width:40px;height:40px;flex-shrink:0;'+(reached?'opacity:.35':'');
+    _drawLuEmblem(embDiv, entry, 40);
+    const ptDiv=document.createElement('div');
+    ptDiv.className='rank-list-pt';
+    ptDiv.textContent=entry.rank+' Lv.'+entry.lv+'　'+entry.pts.toLocaleString()+' pt';
+    item.appendChild(embDiv);
+    item.appendChild(ptDiv);
+    list.appendChild(item);
+  });
+  // 現在のレベルまでスクロール
+  const reachedItems=list.querySelectorAll('.reached');
+  if(reachedItems.length){
+    const last=reachedItems[reachedItems.length-1];
+    setTimeout(()=>last.scrollIntoView({block:'center'}),50);
+  }
+  document.getElementById('rankListModal').classList.add('active');
+}
+function closeRankModal(){
+  document.getElementById('rankListModal').classList.remove('active');
 }
 
 function renderRankBlock(emblemId, ptId, nextId){
@@ -1748,6 +1809,13 @@ function submitSched(){
 
 // EDIT SCHED
 let editingSchedId=null,editingSchedDate=null,editStartDial,editEndDial;
+let editBellOn=false;
+function toggleEditBell(){
+  editBellOn=!editBellOn;
+  document.getElementById('editBellBtn').classList.toggle('on',editBellOn);
+  document.getElementById('editBellSlash').style.display=editBellOn?'none':'';
+  document.getElementById('editNotifRow').classList.toggle('show',editBellOn);
+}
 function openEditSched(id,dateKey){
   editingSchedDate=dateKey||todayKey();
   let s;
@@ -1765,6 +1833,16 @@ function openEditSched(id,dateKey){
   editStartDial=makeDial('editStartWrap',sh,sm,null);
   editEndDial=makeDial('editEndWrap',eh,em,null);
   document.getElementById('editTitle').value=s.title;
+  // ベル・通知を復元（常にベルは表示）
+  editBellOn=s.notif!=null;
+  document.getElementById('editBellBtn').classList.toggle('on',editBellOn);
+  document.getElementById('editBellSlash').style.display=editBellOn?'none':'';
+  document.getElementById('editNotifRow').classList.toggle('show',editBellOn);
+  if(s.notif!=null){
+    const sel=document.getElementById('editNotifSel');
+    sel.value=String(s.notif);
+    if(!sel.value) sel.value='5';
+  }
   document.getElementById('editSchedModal').classList.add('active');
 }
 function closeEditSched(){document.getElementById('editSchedModal').classList.remove('active');}
@@ -1775,6 +1853,7 @@ function submitEditSched(){
   s.title=document.getElementById('editTitle').value.trim()||s.title;
   s.startTime=editStartDial.isEmpty()?'':p2(editStartDial.getH())+':'+p2(editStartDial.getM());
   s.endTime=editEndDial.isEmpty()?'':p2(editEndDial.getH())+':'+p2(editEndDial.getM());
+  s.notif=editBellOn?parseInt(document.getElementById('editNotifSel').value):null;
   saveS();renderSchedules();renderCalendar();closeEditSched();
 }
 function deleteSched(){
@@ -1818,7 +1897,8 @@ function renderCalendar(){
       const raw=ck===todayKey()?S.schedules:(S.history&&S.history[ck]?S.history[ck].schedules:[]);
       const scheds=[...raw.filter(s=>!s.startTime&&!s.endTime),...raw.filter(s=>s.startTime).sort((a,b)=>a.startTime.localeCompare(b.startTime)),...raw.filter(s=>!s.startTime&&s.endTime)];
       if(scheds&&scheds.length) evs=scheds.map(s=>{
-        const t=(!s.startTime&&!s.endTime)?s.title:(s.startTime?fmtTime(s.startTime)+' '+s.title:s.title);
+        const timeStr=s.startTime?fmtTime(s.startTime)+' ':'';
+        const t=timeStr+s.title;
         return `<div class="cal-ev${s.done?' done':''}" onclick="event.stopPropagation();openEditSched(${s.id},'${ck}')">${esc(t)}</div>`;
       }).join('');
     }
@@ -1840,8 +1920,6 @@ let settingsDial;
 function openSettings(){
   settingsDial=makeDial('settingsDialWrap',S.reminderH,S.reminderM,null);
   // スケール設定の初期値
-  document.getElementById('scaleStepPts').value=S.scaleStepPts||5;
-  document.getElementById('scaleStepCnt').value=S.scaleStepCnt||1;
   showScreen('settingsScreen');
 }
 function closeSettings(){showScreen('mainScreen');}
@@ -1858,15 +1936,6 @@ function doReset(){
 function saveReminderTime(){
   S.reminderH=settingsDial.getH();S.reminderM=settingsDial.getM();saveS();
   const msg=document.getElementById('savedMsg');
-  msg.classList.add('show');setTimeout(()=>msg.classList.remove('show'),2000);
-}
-function saveScaleSettings(){
-  const pts=parseInt(document.getElementById('scaleStepPts').value)||5;
-  const cnt=parseInt(document.getElementById('scaleStepCnt').value)||1;
-  S.scaleStepPts=Math.max(1,pts);
-  S.scaleStepCnt=Math.max(1,cnt);
-  saveS();
-  const msg=document.getElementById('scaleSavedMsg');
   msg.classList.add('show');setTimeout(()=>msg.classList.remove('show'),2000);
 }
 // ════════════════════════════════
