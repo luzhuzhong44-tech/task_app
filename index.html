@@ -208,6 +208,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-we
 .lu-zoom{animation:luZoomIn .8s cubic-bezier(.22,1,.36,1) forwards}
 .lu-old{opacity:.4}
 
+.rank-stage-header{font-family:var(--font-serif);font-size:11px;color:var(--text-light);letter-spacing:.14em;padding:10px 0 6px;border-bottom:1px solid var(--line);margin-bottom:4px}
 .rank-list-item{display:flex;align-items:center;gap:14px;padding:10px 0;border-bottom:1px solid var(--line)}
 .rank-list-item:last-child{border-bottom:none}
 .rank-list-pt{font-family:var(--font-serif);font-size:13px;color:var(--text);letter-spacing:.04em;flex:1;text-align:right}
@@ -276,15 +277,27 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-we
 <div class="modal-overlay" id="rankListModal">
   <div class="modal-bg" onclick="closeRankModal()"></div>
   <div class="modal-box" style="max-width:360px;max-height:80vh;display:flex;flex-direction:column;padding:24px 20px">
-    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-shrink:0">
-      <div id="rankModalCurrentEmblem" style="width:44px;height:44px;flex-shrink:0"></div>
-      <div>
-        <div id="rankModalCurrentPt" style="font-family:var(--font-serif);font-size:14px;color:var(--text);letter-spacing:.06em"></div>
-        <div id="rankModalCurrentNext" style="font-family:var(--font-sans);font-size:10px;color:var(--text-light);letter-spacing:.06em;margin-top:2px"></div>
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px;flex-shrink:0">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div id="rankModalCurrentEmblem" style="width:44px;height:44px;flex-shrink:0"></div>
+        <div>
+          <div id="rankModalCurrentPt" style="font-family:var(--font-serif);font-size:14px;color:var(--text);letter-spacing:.06em"></div>
+          <div id="rankModalCurrentNext" style="font-family:var(--font-sans);font-size:10px;color:var(--text-light);letter-spacing:.06em;margin-top:2px"></div>
+        </div>
       </div>
+      <button onclick="closeRankModal()" style="background:none;border:none;cursor:pointer;font-size:12px;color:var(--text-light);letter-spacing:.08em;font-family:var(--font-sans);padding:2px 0;flex-shrink:0">戻る</button>
     </div>
     <div style="border-top:1px solid var(--line);margin-bottom:12px;flex-shrink:0"></div>
     <div id="rankListContent" style="overflow-y:auto;flex:1"></div>
+  </div>
+</div>
+
+<!-- PAGE HELP MODAL -->
+<div class="modal-overlay" id="pageHelpModal">
+  <div class="modal-bg" onclick="closePageHelp()"></div>
+  <div class="modal-box" style="text-align:center">
+    <p style="font-size:14px;font-weight:300;line-height:1.9;color:var(--text);letter-spacing:.06em;margin-bottom:24px">ページとは、<br>todoリストを書くシートのこと</p>
+    <button class="btn-primary" onclick="closePageHelp()">戻る</button>
   </div>
 </div>
 
@@ -308,7 +321,10 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-we
     <p>毎日1枚、静かなページ。<br>タスク・ミッション・予定を<br>シンプルに整えるアプリです。</p>
     <p style="font-family:var(--font-serif);font-size:15px;color:var(--text);letter-spacing:.12em;margin-bottom:8px">まず５分集中</p>
     <p style="font-size:12px;color:var(--text-light);letter-spacing:.08em;line-height:1.9;margin-bottom:32px">タップで開始、長押しで完了</p>
-    <div class="tut-label">ページ作成時刻は？</div>
+    <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:14px">
+      <div class="tut-label" style="margin-bottom:0">ページ作成時刻は？</div>
+      <button onclick="openPageHelp()" style="background:none;border:1px solid var(--text-light);border-radius:50%;width:18px;height:18px;font-size:11px;color:var(--text-light);cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;line-height:1;flex-shrink:0">?</button>
+    </div>
     <div style="display:flex;justify-content:center;margin-bottom:32px">
       <div id="tutDialWrap" class="dial-wrap"></div>
     </div>
@@ -330,8 +346,11 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-we
         <div style="display:flex;align-items:center;gap:10px;margin-right:0">
           <div id="homeRankEmblem" style="width:52px;height:52px;flex-shrink:0;cursor:pointer" onclick="openRankModal()"></div>
           <div style="text-align:right">
-            <div id="homeRankPt" style="font-family:var(--font-serif);font-size:14px;color:var(--text);letter-spacing:.06em"></div>
-            <div id="homeRankNext" style="font-family:var(--font-sans);font-size:11px;color:var(--text-light);letter-spacing:.06em;margin-top:4px"></div>
+            <div style="display:flex;align-items:baseline;justify-content:flex-end;gap:8px">
+              <div id="homeRankStage" style="font-family:var(--font-sans);font-size:11px;color:var(--text-light);letter-spacing:.06em"></div>
+              <div id="homeRankPt" style="font-family:var(--font-serif);font-size:14px;color:var(--text);letter-spacing:.06em"></div>
+            </div>
+            <div id="homeRankNext" style="font-family:var(--font-sans);font-size:11px;color:var(--text-light);letter-spacing:.06em;margin-top:2px"></div>
           </div>
         </div>
         <div style="display:flex;flex-direction:column;align-items:center;gap:8px">
@@ -428,8 +447,11 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-we
       <div style="display:flex;align-items:center;gap:10px">
         <div id="rankEmblem" style="position:relative;width:52px;height:52px;flex-shrink:0;cursor:pointer" onclick="openRankModal()"></div>
         <div style="text-align:right">
-          <div id="rankPtDisp" style="font-family:var(--font-serif);font-size:20px;font-weight:300;color:var(--text);letter-spacing:.1em"></div>
-          <div id="rankNextDisp" style="font-family:var(--font-sans);font-size:11px;color:var(--text-light);letter-spacing:.06em;margin-top:4px"></div>
+          <div style="display:flex;align-items:baseline;justify-content:flex-end;gap:8px">
+            <div id="rankStageDisp" style="font-family:var(--font-sans);font-size:11px;color:var(--text-light);letter-spacing:.06em"></div>
+            <div id="rankPtDisp" style="font-family:var(--font-serif);font-size:20px;font-weight:300;color:var(--text);letter-spacing:.1em"></div>
+          </div>
+          <div id="rankNextDisp" style="font-family:var(--font-sans);font-size:11px;color:var(--text-light);letter-spacing:.06em;margin-top:2px"></div>
         </div>
       </div>
     </div>
@@ -642,7 +664,19 @@ function jstNow(){
   return new Date(new Date().toLocaleString('en-US',{timeZone:'Asia/Tokyo'}));
 }
 function dateKey(d){ return d.getFullYear()+'-'+p2(d.getMonth()+1)+'-'+p2(d.getDate()); }
-function todayKey(){ return dateKey(jstNow()); }
+function todayKey(){
+  const n=jstNow();
+  const nowM=n.getHours()*60+n.getMinutes();
+  const remM=(S.reminderH||0)*60+(S.reminderM||0);
+  // ページ作成時刻前なら前日扱い
+  if(nowM<remM){
+    const d=new Date(n);
+    d.setDate(d.getDate()-1);
+    return dateKey(d);
+  }
+  return dateKey(n);
+}
+function calendarKey(){ return dateKey(jstNow()); }
 function p2(n){ return String(n).padStart(2,'0'); }
 const DAYS=['日','月','火','水','木','金','土'];
 
@@ -734,7 +768,7 @@ function grantLoginBonus(key){
 // LOGIN BONUS SCREEN
 // ═══════════════════════════════
 function openLbScreen(){
-  const key=todayKey();
+  const key=calendarKey();
   grantLoginBonus(key);
   const n=jstNow();
   const sun=weekSunday(n);
@@ -858,6 +892,8 @@ function makeDial(wrapId, h0, m0, cb){
 // TUTORIAL
 // ════════════════════════════════
 let tutDial;
+function openPageHelp(){document.getElementById('pageHelpModal').classList.add('active');}
+function closePageHelp(){document.getElementById('pageHelpModal').classList.remove('active');}
 function initTutorial(){
   tutDial=makeDial('tutDialWrap',8,0,null);
 }
@@ -901,7 +937,7 @@ function checkLevelUp(prevPts, newPts, returnScreenId){
       wrap.innerHTML='';
       wrap.className='lu-zoom';
       _drawLuEmblem(wrap, newR, 100);
-      label.textContent=newR.rank+' Lv.'+newR.lv;
+      label.textContent='STAGE '+getStage(newR.rank)+' '+newR.rank+' Lv.'+newR.lv;
       // 1秒後に元画面へ戻る
       setTimeout(()=>{
         screen.style.display='none';
@@ -940,10 +976,20 @@ function openRankModal(){
   const label=(r&&r.lv===10)?'次のランクまであと':'次のレベルまであと';
   document.getElementById('rankModalCurrentNext').textContent=nextLevel?label+' '+(nextLevel.pts-pts)+' pt':'最高ランク達成';
 
-  // ランク一覧（pt低い順）
+  // ランク一覧（pt低い順）、ステージ区切り付き
   const list=document.getElementById('rankListContent');
   list.innerHTML='';
-  [...RANK_TABLE].sort((a,b)=>a.pts-b.pts).forEach(entry=>{
+  const sorted=[...RANK_TABLE].sort((a,b)=>a.pts-b.pts);
+  let lastStage=null;
+  sorted.forEach(entry=>{
+    const stage=getStage(entry.rank);
+    if(stage!==lastStage){
+      const hdr=document.createElement('div');
+      hdr.className='rank-stage-header';
+      hdr.textContent='STAGE '+stage;
+      list.appendChild(hdr);
+      lastStage=stage;
+    }
     const reached=pts>=entry.pts;
     const item=document.createElement('div');
     item.className='rank-list-item'+(reached?' reached':'');
@@ -969,12 +1015,21 @@ function closeRankModal(){
   document.getElementById('rankListModal').classList.remove('active');
 }
 
+function getStage(rank){
+  if(['E','D','C','B','A'].includes(rank)) return 1;
+  if(rank==='S'||rank.match(/^S\d+$/)) return 2;
+  return 3;
+}
+
 function renderRankBlock(emblemId, ptId, nextId){
   const pts=Object.values(S.points||{}).reduce((s,d)=>s+(d.pts||0),0);
   const r=calcRank(pts);
   const nextLevel=RANK_TABLE.slice().reverse().find(t=>t.pts>pts);
   const label=(r&&r.lv===10)?'次のランクまであと':'次のレベルまであと';
   if(ptId) document.getElementById(ptId).textContent=pts+' pt';
+  const stageText=r?'STAGE '+getStage(r.rank):'';
+  const stageId=ptId==='homeRankPt'?'homeRankStage':ptId==='rankPtDisp'?'rankStageDisp':null;
+  if(stageId&&document.getElementById(stageId)) document.getElementById(stageId).textContent=stageText;
   if(nextId) document.getElementById(nextId).textContent=nextLevel?label+' '+(nextLevel.pts-pts)+' pt':'最高ランク達成';
   const emblem=document.getElementById(emblemId);
   if(!emblem)return;
@@ -1009,8 +1064,8 @@ function initMain(){
     const n=jstNow();
     const nowM=n.getHours()*60+n.getMinutes();
     const remM=S.reminderH*60+S.reminderM;
-    // 日付変わり検知
-    if(S.lastOpenDate&&S.lastOpenDate!==k){
+    // ページ作成時刻を過ぎて日付が変わった時に切り替え
+    if(S.lastOpenDate&&S.lastOpenDate!==k&&nowM>=remM){
       checkReset();initDate();renderMissions();renderTasks();renderSchedules();renderCalendar();
     }
     // ページ作成時刻の1分前になったら全クリアボーナス付与（当日）
@@ -1179,7 +1234,7 @@ function toggleDone(type,id){
   const wasDone=item.done;
   item.done=!item.done;
   // ポイント計算
-  const key=todayKey();
+  const key=calendarKey();
   if(!S.points)S.points={};
   if(!S.points[key])S.points[key]={pts:0,mis:0,tsk:0};
   const P=S.points[key];
@@ -1601,7 +1656,7 @@ function saveFreeRun(){
     const id=S.nextId++;
     S.missions.push({id,text:val,done:true});
     // ポイント付与
-    const key=todayKey();
+    const key=calendarKey();
     if(!S.points)S.points={};
     if(!S.points[key])S.points[key]={pts:0,mis:0,tsk:0};
     S.points[key].pts+=10; S.points[key].mis+=1;
@@ -1695,7 +1750,7 @@ function toggleScheduleDone(id){
   if(!s)return;
   const wasDone=s.done;
   s.done=!s.done;
-  const key=todayKey();
+  const key=calendarKey();
   if(!S.points)S.points={};
   if(!S.points[key])S.points[key]={pts:0,mis:0,tsk:0};
   const prevTotalPts=Object.values(S.points).reduce((s,d)=>s+(d.pts||0),0);
@@ -1897,9 +1952,7 @@ function renderCalendar(){
       const raw=ck===todayKey()?S.schedules:(S.history&&S.history[ck]?S.history[ck].schedules:[]);
       const scheds=[...raw.filter(s=>!s.startTime&&!s.endTime),...raw.filter(s=>s.startTime).sort((a,b)=>a.startTime.localeCompare(b.startTime)),...raw.filter(s=>!s.startTime&&s.endTime)];
       if(scheds&&scheds.length) evs=scheds.map(s=>{
-        const timeStr=s.startTime?fmtTime(s.startTime)+' ':'';
-        const t=timeStr+s.title;
-        return `<div class="cal-ev${s.done?' done':''}" onclick="event.stopPropagation();openEditSched(${s.id},'${ck}')">${esc(t)}</div>`;
+        return `<div class="cal-ev${s.done?' done':''}" onclick="event.stopPropagation();openEditSched(${s.id},'${ck}')">${esc(s.title)}</div>`;
       }).join('');
     }
     const numHTML=isToday?`<div class="cal-num circ">${day}</div>`:`<div class="cal-num">${day}</div>`;
